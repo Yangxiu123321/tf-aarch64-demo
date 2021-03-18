@@ -5,8 +5,7 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(tf_ROOT ${CMAKE_CURRENT_LIST_DIR}/../include/tensorflow)
 set(tf_INCLUDE_DIRS ${tf_ROOT}
-                    ${tf_ROOT}/bazel-genfiles
-                    ${tf_ROOT}/bazel-bin/tensorflow)
+                    ${tf_ROOT}/bazel-genfiles)
 set(tf_LIBRARIES ${CMAKE_CURRENT_LIST_DIR}/../lib/tensorflow/libtensorflow_cc.so  ${CMAKE_CURRENT_LIST_DIR}/../lib/tensorflow/libtensorflow_framework.so)
 
 set(protobuf_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/../thirdParty/protobuf/include)

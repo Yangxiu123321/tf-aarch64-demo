@@ -153,6 +153,26 @@ make
 make install DESTDIR=./install
 ```
 
+#### 7、静态编译
+
+TODO
+
+1、方法1（推荐）
+
+修改CROSSTOOL
+
+https://docs.bazel.build/versions/master/cc-toolchain-config-reference.html
+
+2、方法2（较繁琐）
+
+```shell
+cd tensorflow/contrib/makefile
+# MacOS 以及Linux 使用此脚本
+./build_all_linux.sh
+# 仿照者android的修改编译文件
+./build_all_android.sh
+```
+
 #### 参考
 
 https://blog.csdn.net/weixin_37958647/article/details/108500975
