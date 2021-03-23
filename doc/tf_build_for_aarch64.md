@@ -165,6 +165,8 @@ https://docs.bazel.build/versions/master/cc-toolchain-config-reference.html
 
 2、方法2（较繁琐）
 
+http://www.luohanjie.com/2019-07-17/build-tensorflow-c-static-libraries.html
+
 ```shell
 cd tensorflow/contrib/makefile
 # MacOS 以及Linux 使用此脚本
