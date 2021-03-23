@@ -2,7 +2,7 @@
 # !!!NO PLATFORM CHECK
 # !!!NO Config
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -O3 -ggdb -Wall -finline-functions -Wl,--allow-multiple-definition -Wl,--whole-archive")
 
 set(tf_ROOT ${CMAKE_CURRENT_LIST_DIR}/../include/tensorflow)
 set(tf_thirdParty_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../thirdParty/proto
