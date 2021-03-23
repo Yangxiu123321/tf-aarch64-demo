@@ -155,25 +155,287 @@ make install DESTDIR=./install
 
 #### 7、静态编译
 
-TODO
+静态库相比动态库而言，有许多算子不能使用
 
-1、方法1（推荐）
+1、方法1（没试过）
 
 修改CROSSTOOL
 
 https://docs.bazel.build/versions/master/cc-toolchain-config-reference.html
 
-2、方法2（较繁琐）
+2、方法2（测试通过）
 
 http://www.luohanjie.com/2019-07-17/build-tensorflow-c-static-libraries.html
 
-```shell
-cd tensorflow/contrib/makefile
-# MacOS 以及Linux 使用此脚本
-./build_all_linux.sh
-# 仿照者android的修改编译文件
-./build_all_android.sh
+- 在本机上下载所需要的依赖
+
+在pc机上进行，需要用到代理。
+
+修改编译文件tensorflow/contrib/makefile/build_all_linux.sh
+
+```makefile
+# Remove any old files first.
+#make -f tensorflow/contrib/makefile/Makefile clean
+#rm -rf tensorflow/contrib/makefile/downloads
+
+# Pull down the required versions of the frameworks we need.
+tensorflow/contrib/makefile/download_dependencies.sh
+
+# Compile nsync.
+# Don't use  export var=`something` syntax; it swallows the exit status.
+# HOST_NSYNC_LIB=`tensorflow/contrib/makefile/compile_nsync.sh`
+# TARGET_NSYNC_LIB="$HOST_NSYNC_LIB"
+TARGET_NSYNC_LIB=tensorflow/contrib/makefile/downloads/nsync/build/libnsync.a
+# echo "${TARGET_NSYNC_LIB}"
+exit 0 #下载之后直接退出
+export HOST_NSYNC_LIB TARGET_NSYNC_LIB
+
+# Compile protobuf.
+# tensorflow/contrib/makefile/compile_linux_protobuf.sh
 ```
+
+如果挂代理还是无法下载的，根据提示的链接手动下载，放到 tensorflow/contrib/makefile/downloads目录下
+
+下载之后的目录如下
+
+```
+mod@mod downloads $ tree -L 2
+.
+├── absl
+│   ├── ABSEIL_ISSUE_TEMPLATE.md
+│   ├── absl
+│   ├── AUTHORS
+│   ├── CMake
+│   ├── CMakeLists.txt
+│   ├── CONTRIBUTING.md
+│   ├── LICENSE
+│   ├── README.md
+│   └── WORKSPACE
+├── cub
+│   └── external
+├── double_conversion
+│   ├── AUTHORS
+│   ├── Changelog
+│   ├── cmake
+│   ├── CMakeLists.txt
+│   ├── COPYING
+│   ├── double-conversion
+│   ├── LICENSE
+│   ├── Makefile
+│   ├── msvc
+│   ├── README.md
+│   ├── SConstruct
+│   ├── test
+│   └── WORKSPACE
+├── eigen
+│   ├── bench
+│   ├── blas
+│   ├── cmake
+│   ├── CMakeLists.txt
+│   ├── COPYING.BSD
+│   ├── COPYING.GPL
+│   ├── COPYING.LGPL
+│   ├── COPYING.MINPACK
+│   ├── COPYING.MPL2
+│   ├── COPYING.README
+│   ├── CTestConfig.cmake
+│   ├── CTestCustom.cmake.in
+│   ├── debug
+│   ├── demos
+│   ├── doc
+│   ├── Eigen
+│   ├── eigen3.pc.in
+│   ├── failtest
+│   ├── INSTALL
+│   ├── lapack
+│   ├── README.md
+│   ├── scripts
+│   ├── signature_of_eigen3_matrix_library
+│   ├── test
+│   └── unsupported
+├── fft2d
+│   ├── fft4g.c
+│   ├── fft4g.f
+│   ├── fft4g_h.c
+│   ├── fft8g.c
+│   ├── fft8g.f
+│   ├── fft8g_h.c
+│   ├── fftsg.c
+│   ├── fftsg.f
+│   ├── fftsg_h.c
+│   ├── readme.txt
+│   ├── sample1
+│   └── sample2
+├── gemmlowp
+│   ├── AUTHORS
+│   ├── contrib
+│   ├── CONTRIBUTING
+│   ├── CONTRIBUTORS
+│   ├── doc
+│   ├── eight_bit_int_gemm
+│   ├── fixedpoint
+│   ├── flags.bzl
+│   ├── internal
+│   ├── jni
+│   ├── LICENSE
+│   ├── Makefile.travis
+│   ├── meta
+│   ├── profiling
+│   ├── public
+│   ├── README.md
+│   ├── scripts
+│   ├── standalone
+│   ├── test
+│   ├── todo
+│   └── WORKSPACE
+├── googletest
+│   ├── appveyor.yml
+│   ├── CMakeLists.txt
+│   ├── googlemock
+│   ├── googletest
+│   ├── README.md
+│   └── travis.sh
+├── nsync
+│   ├── bazel
+│   ├── builds
+│   ├── CMakeLists.txt
+│   ├── CONTRIBUTING
+│   ├── internal
+│   ├── LICENSE
+│   ├── platform
+│   ├── public
+│   ├── README
+│   ├── testing
+│   ├── tools
+│   └── WORKSPACE
+├── protobuf
+│   ├── appveyor.bat
+│   ├── appveyor.yml
+│   ├── autogen.sh
+│   ├── benchmarks
+│   ├── CHANGES.txt
+│   ├── cmake
+│   ├── composer.json
+│   ├── configure.ac
+│   ├── conformance
+│   ├── CONTRIBUTORS.txt
+│   ├── csharp
+│   ├── docs
+│   ├── editors
+│   ├── examples
+│   ├── generate_changelog.py
+│   ├── generate_descriptor_proto.sh
+│   ├── java
+│   ├── javanano
+│   ├── jenkins
+│   ├── js
+│   ├── kokoro
+│   ├── LICENSE
+│   ├── m4
+│   ├── Makefile.am
+│   ├── more_tests
+│   ├── objectivec
+│   ├── php
+│   ├── post_process_dist.sh
+│   ├── protobuf.bzl
+│   ├── protobuf-lite.pc.in
+│   ├── protobuf.pc.in
+│   ├── Protobuf.podspec
+│   ├── protoc-artifacts
+│   ├── python
+│   ├── README.md
+│   ├── ruby
+│   ├── src
+│   ├── tests.sh
+│   ├── third_party
+│   ├── update_file_lists.sh
+│   ├── util
+│   └── WORKSPACE
+└── re2
+    ├── AUTHORS
+    ├── benchlog
+    ├── CMakeLists.txt
+    ├── CONTRIBUTING.md
+    ├── CONTRIBUTORS
+    ├── doc
+    ├── kokoro
+    ├── lib
+    ├── libre2.symbols
+    ├── libre2.symbols.darwin
+    ├── LICENSE
+    ├── Makefile
+    ├── re2
+    ├── re2.pc
+    ├── re2_test.bzl
+    ├── README
+    ├── runtests
+    ├── testinstall.cc
+    ├── ucs2.diff
+    ├── util
+    └── WORKSPACE
+
+```
+
+在整个tensorflow文件拷贝到工控机上(ARM64)
+
+- 本地编译
+
+1、nsync编译
+
+```shell
+cd tensorflow/contrib/makefile/downloads/nsync
+mkdir build && cd build
+# 对应的CMakeLists.txt文件中，有说明如果要使用c++的接口，要打开这个标志，不然好多符号不会被链接
+cmake -DNSYNC_LANGUAGE=c++11 ..
+make
+```
+
+2、protobuf编译
+
+修改编译文件tensorflow/contrib/makefile/build_all_linux.sh
+
+```makefile
+# Remove any old files first.
+#make -f tensorflow/contrib/makefile/Makefile clean
+#rm -rf tensorflow/contrib/makefile/downloads
+
+# Pull down the required versions of the frameworks we need.
+#tensorflow/contrib/makefile/download_dependencies.sh
+
+# Compile nsync.
+# Don't use  export var=`something` syntax; it swallows the exit status.
+# HOST_NSYNC_LIB=`tensorflow/contrib/makefile/compile_nsync.sh`
+# TARGET_NSYNC_LIB="$HOST_NSYNC_LIB"
+TARGET_NSYNC_LIB=tensorflow/contrib/makefile/downloads/nsync/build/libnsync.a
+# echo "${TARGET_NSYNC_LIB}"
+# exit 0
+export HOST_NSYNC_LIB TARGET_NSYNC_LIB
+
+# Compile protobuf.
+tensorflow/contrib/makefile/compile_linux_protobuf.sh
+```
+
+修改tensorflow/contrib/makefile/Makefile
+
+```makefile
+HOST_LIBS := \
+$(HOST_NSYNC_LIB) \ # 不知道为什么这个环境变量不起作用
+-lstdc++ \
+-lprotobuf \
+-lpthread \
+-lm \
+-lz \
+tensorflow/contrib/makefile/downloads/nsync/build/libnsync.a
+```
+
+运行修改过的脚本，即可编译
+
+```shell
+cd <root-dir>
+bash ./tensorflow/contrib/makefile/build_all_linux.sh
+```
+
+如何不是到自己的项目，参考static分支
 
 #### 参考
 
