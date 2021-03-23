@@ -77,3 +77,7 @@ mod@mod aarch64-tensorflow-example git:[master] $ tree -L 2
 https://github.com/xifengcun/tensorflow-aarch64-crossbuild
 
 https://github.com/zhangcliff/tensorflow-c-mnist
+
+https://github.com/rockingdingo/tensorflow-tutorial.git  (tf_minist)
+
+https://zhuanlan.zhihu.com/p/30985013 (tf_add)

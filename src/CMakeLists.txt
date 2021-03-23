@@ -20,4 +20,5 @@ macro(tf_add_example name)
 endmacro()
 
 tf_add_example(tf_env)
+tf_add_example(tf_add)
 #tf_add_example(tf_minist)
